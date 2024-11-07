@@ -108,7 +108,7 @@ public class BookCardController {
             try (PreparedStatement updatePreparedStatement = conn.prepareStatement(update_query)) {
                 updatePreparedStatement.setInt(1, book.getQuantity() - 1);
                 updatePreparedStatement.setInt(2, id);
-                updatePreparedStatement.executeUpdate();
+                
             int isUpdated = updatePreparedStatement.executeUpdate();
             if(isUpdated > 0) {
                 book.setQuantity(book.getQuantity() - 1);
@@ -128,6 +128,7 @@ public class BookCardController {
                 preparedStatement.setString(5, findGenre);
                 preparedStatement.setString(6, findImageSrc);
                 preparedStatement.setInt(7, book.getQuantity() );
+                
                 // Thực hiện câu lệnh SQL
                 int result = preparedStatement.executeUpdate();
                 if (result > 0) {
@@ -152,11 +153,13 @@ public class BookCardController {
         // delete borrowed book from borrowed_books table
         User currentUser = Login.getCurrentUser();
         int id = currentUser.getId();
+        int book_id = book.getBookIdFromBookCard(findTitle);
         String delete_query = "DELETE FROM borrowed_books WHERE user_id = ? AND title = ?";
         try (PreparedStatement preparedStatement = conn.prepareStatement(delete_query)) {
             // Gán giá trị cho các tham số
             preparedStatement.setInt(1, currentUser.getId());
             preparedStatement.setString(2, findTitle);
+            
             // Thực hiện câu lệnh SQL
             int result = preparedStatement.executeUpdate();
             if(result > 0) {
@@ -171,21 +174,23 @@ public class BookCardController {
             System.out.println("Failed to add record.");
         }
         // update quantity in book table
+
+
         String update_query = "UPDATE book SET quantity = ? WHERE book_id = ?";
             try (PreparedStatement updatePreparedStatement = conn.prepareStatement(update_query))
             {
-                updatePreparedStatement.setInt(1, book.getQuantity() +1);
-                updatePreparedStatement.setInt(2, id);
-                updatePreparedStatement.executeUpdate();
+                updatePreparedStatement.setInt(1, book.getQuantity() + 1);
+                updatePreparedStatement.setInt(2, book_id);
+                
             int isUpdated = updatePreparedStatement.executeUpdate();
-            if(isUpdated > 0) {
+             if(isUpdated > 0) {
                 book.setQuantity(book.getQuantity() +1);
                 quantity.setText(String.valueOf(book.getQuantity() ) + " " + "remaining");
-            }
+             }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        this.borrowing_bookController.initialize(null, null);
+        
     }
 
 
