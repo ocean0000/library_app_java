@@ -53,6 +53,7 @@ public class BookCardController {
     String findAuthor;
     String findGenre;
     String findImageSrc;
+   
 
     public void setData(Book book) {
         this.book = book;
@@ -71,6 +72,8 @@ public class BookCardController {
         findAuthor = author.getText();
         findGenre = genre.getText();
         findImageSrc = imagePath;
+        
+        
     }
 
     public boolean isBookAlreadyBorrowed() throws SQLException {
@@ -87,13 +90,32 @@ public class BookCardController {
         }
         return false;
     }
+   
 
     @FXML
     private void handleBorrowButtonAction(ActionEvent event) throws SQLException {
         if(isBookAlreadyBorrowed()) {
             showAlert(Alert.AlertType.INFORMATION, "lỗi" , "Đã mượn sách này rồi");
         }
+        else if(book.getQuantity() == 0) {
+            showAlert(Alert.AlertType.INFORMATION, "lỗi" , "Hết sách rồi");
+        }
+        
         else {
+            // update quantity in book table
+            String query = "UPDATE book SET quantity = ? WHERE book_id = ?";
+            try (PreparedStatement updatePreparedStatement = conn.prepareStatement(query)) {
+                updatePreparedStatement.setInt(1, book.getQuantity() - 1);
+                updatePreparedStatement.setInt(2, id);
+                updatePreparedStatement.executeUpdate();
+            int isUpdated = updatePreparedStatement.executeUpdate();
+            if(isUpdated > 0) {
+                quantity.setText(String.valueOf(book.getQuantity() - 1) + " " + "remaining");
+            }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            // insert borrowed book into borrowed_books table
             String insertQuery = "INSERT INTO borrowed_books(user_id, book_id, title, author, genre, imageSrc) VALUES(?, ?, ?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = conn.prepareStatement(insertQuery)) {
                 // Gán giá trị cho các tham số
@@ -103,16 +125,19 @@ public class BookCardController {
                 preparedStatement.setString(4, findAuthor);
                 preparedStatement.setString(5, findGenre);
                 preparedStatement.setString(6, findImageSrc);
+          
                 // Thực hiện câu lệnh SQL
                 int result = preparedStatement.executeUpdate();
                 if (result > 0) {
+                   
+                    
                     showAlert(Alert.AlertType.INFORMATION, "Borrowed Book", "Borrowed " + findTitle + " Successfully");
                 } else {
                     showAlert(Alert.AlertType.ERROR, "Borrowed Book", "Lỗi, không mượn được sách");
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-                System.out.println("Failed to add recordadjajsdjajdajdsaj.");
+                System.out.println("Failed to add record.");
 
             }
         }
