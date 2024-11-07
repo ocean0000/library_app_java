@@ -110,13 +110,14 @@ public class BookCardController {
                 updatePreparedStatement.executeUpdate();
             int isUpdated = updatePreparedStatement.executeUpdate();
             if(isUpdated > 0) {
-                quantity.setText(String.valueOf(book.getQuantity() - 1) + " " + "remaining");
+                book.setQuantity(book.getQuantity() - 1);
+                quantity.setText(String.valueOf(book.getQuantity() ) + " " + "remaining");
             }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
             // insert borrowed book into borrowed_books table
-            String insertQuery = "INSERT INTO borrowed_books(user_id, book_id, title, author, genre, imageSrc) VALUES(?, ?, ?, ?, ?, ?)";
+            String insertQuery = "INSERT INTO borrowed_books(user_id, book_id, title, author, genre, imageSrc,quantity) VALUES(?, ?, ?, ?, ?, ?,?)";
             try (PreparedStatement preparedStatement = conn.prepareStatement(insertQuery)) {
                 // Gán giá trị cho các tham số
                 preparedStatement.setInt(1, currentUser.getId());
@@ -125,7 +126,7 @@ public class BookCardController {
                 preparedStatement.setString(4, findAuthor);
                 preparedStatement.setString(5, findGenre);
                 preparedStatement.setString(6, findImageSrc);
-          
+                preparedStatement.setInt(7, book.getQuantity() );
                 // Thực hiện câu lệnh SQL
                 int result = preparedStatement.executeUpdate();
                 if (result > 0) {
