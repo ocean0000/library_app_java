@@ -54,7 +54,7 @@ public class BookCardController {
     String findAuthor;
     String findGenre;
     String findImageSrc;
-    private Borrowing_BookController borrowing_bookController;
+
 
     public void setData(Book book) {
         this.book = book;
