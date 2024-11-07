@@ -20,6 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+
 public class BookCardController {
     @FXML
     private HBox hbox;
@@ -53,7 +54,7 @@ public class BookCardController {
     String findAuthor;
     String findGenre;
     String findImageSrc;
-   
+    private Borrowing_BookController borrowing_bookController;
 
     public void setData(Book book) {
         this.book = book;
@@ -103,8 +104,8 @@ public class BookCardController {
         
         else {
             // update quantity in book table
-            String query = "UPDATE book SET quantity = ? WHERE book_id = ?";
-            try (PreparedStatement updatePreparedStatement = conn.prepareStatement(query)) {
+            String update_query = "UPDATE book SET quantity = ? WHERE book_id = ?";
+            try (PreparedStatement updatePreparedStatement = conn.prepareStatement(update_query)) {
                 updatePreparedStatement.setInt(1, book.getQuantity() - 1);
                 updatePreparedStatement.setInt(2, id);
                 updatePreparedStatement.executeUpdate();
@@ -117,8 +118,8 @@ public class BookCardController {
                 e.printStackTrace();
             }
             // insert borrowed book into borrowed_books table
-            String insertQuery = "INSERT INTO borrowed_books(user_id, book_id, title, author, genre, imageSrc,quantity) VALUES(?, ?, ?, ?, ?, ?,?)";
-            try (PreparedStatement preparedStatement = conn.prepareStatement(insertQuery)) {
+            String insert_Query = "INSERT INTO borrowed_books(user_id, book_id, title, author, genre, imageSrc,quantity) VALUES(?, ?, ?, ?, ?, ?,?)";
+            try (PreparedStatement preparedStatement = conn.prepareStatement(insert_Query)) {
                 // Gán giá trị cho các tham số
                 preparedStatement.setInt(1, currentUser.getId());
                 preparedStatement.setInt(2, id);
@@ -143,6 +144,52 @@ public class BookCardController {
             }
         }
     }
+
+    @FXML
+    public void handleReturnBook()
+    {    
+        
+        // delete borrowed book from borrowed_books table
+        User currentUser = Login.getCurrentUser();
+        int id = currentUser.getId();
+        String delete_query = "DELETE FROM borrowed_books WHERE user_id = ? AND title = ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(delete_query)) {
+            // Gán giá trị cho các tham số
+            preparedStatement.setInt(1, currentUser.getId());
+            preparedStatement.setString(2, findTitle);
+            // Thực hiện câu lệnh SQL
+            int result = preparedStatement.executeUpdate();
+            if(result > 0) {
+                showAlert(Alert.AlertType.INFORMATION, "Return Book", "Returned " + findTitle + " Successfully");
+            }
+            else {
+                showAlert(Alert.AlertType.ERROR, "Return Book", "Lỗi, không trả được sách");
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Failed to add record.");
+        }
+        // update quantity in book table
+        String update_query = "UPDATE book SET quantity = ? WHERE book_id = ?";
+            try (PreparedStatement updatePreparedStatement = conn.prepareStatement(update_query))
+            {
+                updatePreparedStatement.setInt(1, book.getQuantity() +1);
+                updatePreparedStatement.setInt(2, id);
+                updatePreparedStatement.executeUpdate();
+            int isUpdated = updatePreparedStatement.executeUpdate();
+            if(isUpdated > 0) {
+                book.setQuantity(book.getQuantity() +1);
+                quantity.setText(String.valueOf(book.getQuantity() ) + " " + "remaining");
+            }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        this.borrowing_bookController.initialize(null, null);
+    }
+
+
+
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);

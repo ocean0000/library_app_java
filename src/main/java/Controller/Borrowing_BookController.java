@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
+
+
 public class Borrowing_BookController implements Initializable {
     @FXML
     private GridPane bookContainer;
@@ -36,12 +38,12 @@ public class Borrowing_BookController implements Initializable {
         try{
             for (Book book : borrowingBook) {
                 FXMLLoader fxmlLoader = new FXMLLoader();
-                fxmlLoader.setLocation(getClass().getResource("/com/example/library/BookCard.fxml"));
+                fxmlLoader.setLocation(getClass().getResource("/com/example/library/borrowed_book.fxml"));
                 HBox bookCardBox = fxmlLoader.load();
 
                 BookCardController bookCardController = fxmlLoader.getController();
                 bookCardController.setData(book);
-
+                
                 if (column == 3) {
                     column = 0;
                     row++;
@@ -55,6 +57,7 @@ public class Borrowing_BookController implements Initializable {
         }
     }
 
+
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -62,6 +65,9 @@ public class Borrowing_BookController implements Initializable {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    
+
     public List<Book> getBorrowingBook() {
         List<Book> bookList = new ArrayList<>();
         User currentUser = Login.getCurrentUser();
