@@ -149,7 +149,7 @@ public class BookCardController {
     @FXML
     public void handleReturnBook()
     {    
-        
+        boolean isReturned = false;
         // delete borrowed book from borrowed_books table
         User currentUser = Login.getCurrentUser();
         int id = currentUser.getId();
@@ -164,6 +164,7 @@ public class BookCardController {
             int result = preparedStatement.executeUpdate();
             if(result > 0) {
                 showAlert(Alert.AlertType.INFORMATION, "Return Book", "Returned " + findTitle + " Successfully");
+                isReturned = true;
             }
             else {
                 showAlert(Alert.AlertType.ERROR, "Return Book", "Lỗi, không trả được sách");
@@ -175,7 +176,9 @@ public class BookCardController {
         }
         // update quantity in book table
 
-
+        if(isReturned) 
+        {
+            
         String update_query = "UPDATE book SET quantity = ? WHERE book_id = ?";
             try (PreparedStatement updatePreparedStatement = conn.prepareStatement(update_query))
             {
@@ -190,6 +193,7 @@ public class BookCardController {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
         
     }
 

@@ -38,7 +38,7 @@ public class Borrowing_BookController implements Initializable {
         try{
             for (Book book : borrowingBook) {
                 FXMLLoader fxmlLoader = new FXMLLoader();
-                fxmlLoader.setLocation(getClass().getResource("/com/example/library/borrowed_book.fxml"));
+                fxmlLoader.setLocation(getClass().getResource("/com/example/library/borrowed_book_card.fxml"));
                 HBox bookCardBox = fxmlLoader.load();
 
                 BookCardController bookCardController = fxmlLoader.getController();
