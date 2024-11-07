@@ -30,9 +30,9 @@
    <right>
       <AnchorPane prefHeight="500.0" prefWidth="705.0" style="-fx-background-color: #fff;" BorderPane.alignment="CENTER">
          <children>
-            <Button layoutX="175.0" layoutY="357.0" mnemonicParsing="false" onAction="#handleRegisterButtonAction" style="-fx-background-color: transperent;" text="Chưa có tài khoản? Đăng ký" textFill="#3f95ce" />
+            <Button layoutX="175.0" layoutY="357.0" mnemonicParsing="false" onAction="#handleRegisterButtonAction"  style="-fx-background-color: transperent;" text="Chưa có tài khoản? Đăng ký" textFill="#3f95ce" />
             <TextField fx:id="usernameField" layoutX="100.0" layoutY="182.0" promptText="User Name" style="-fx-background-color: transperent; -fx-border-color: #0598ff; -fx-border-width: 0 0 2 0;" />
-            <PasswordField fx:id="passwordField" layoutX="100.0" layoutY="257.0" promptText="Password" style="-fx-background-color: transperent; -fx-border-color: #0598ff; -fx-border-width: 0 0 2 0;" />
+            <PasswordField fx:id="passwordField" layoutX="100.0" layoutY="257.0" promptText="Password" onAction="#handleLogin"  style="-fx-background-color: transperent; -fx-border-color: #0598ff; -fx-border-width: 0 0 2 0;" />
             <ImageView fitHeight="31.0" fitWidth="29.0" layoutX="68.0" layoutY="191.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../image/user_icon.png" />
