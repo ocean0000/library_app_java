@@ -72,7 +72,7 @@ public class UserInterfaceController {
     }
 
     @FXML
-    private void handleDashBoardButtonAction(ActionEvent event) {
+    public void handleDashBoardButtonAction(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/library/DashBoard.fxml"));
             AnchorPane dashBoardView = fxmlLoader.load();

@@ -41,7 +41,7 @@ public class LoginController {
             if (user.getUserType().equalsIgnoreCase("admin")) {
                 loadScene("/com/example/library/admin_interface.fxml", "Quản lý thư viện(admin)");
             } else {
-                loadScene("/com/example/library/user_interface.fxml", "Quản lý thư viện(user");
+                loadScene("/com/example/library/user_interface.fxml", "Quản lý thư viện(user "+user.getName()+")");
             }
         } else {
             showAlert(AlertType.ERROR, "Đăng nhập thất bại", "Tên đăng nhập hoặc mật khẩu không đúng");
@@ -70,6 +70,9 @@ public class LoginController {
             stage.setTitle(title);
             stage.centerOnScreen();
             stage.show();
+            UserInterfaceController dashboardController = loader.getController();
+            dashboardController.handleDashBoardButtonAction(null);
+
         } catch (IOException e) {
             showAlert(AlertType.ERROR, "Lỗi", "Không thể tải giao diện.");
             e.printStackTrace();

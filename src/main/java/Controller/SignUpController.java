@@ -48,6 +48,16 @@ public class SignUpController {
             return;
         }
 
+        try // id phải là số
+        {
+            Long.parseLong(studentIdStr); 
+        }
+        catch(NumberFormatException e)
+        {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "ID sinh viên phải là số.");
+            return;
+        }
+
         long studentId= Long.parseLong(studentIdStr);
         // Kiểm tra nếu ID đã tồn tại
         if (loginService.isIdExists(studentId)) {
@@ -56,6 +66,7 @@ public class SignUpController {
         }
         // Đăng ký người dùng
         boolean isRegistered = loginService.register(username,fullName, password, studentId, "student");
+
 
         if (isRegistered) {
             showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đăng ký thành công!");
